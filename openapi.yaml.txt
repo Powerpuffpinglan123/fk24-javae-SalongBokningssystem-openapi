@@ -1,0 +1,331 @@
+---
+openapi: 3.0.3
+info:
+  title: fk24-javae-SalongBokningssystem API
+  version: 1.0.0-SNAPSHOT
+paths:
+  /behandlingar/borttagning/{id}:
+    delete:
+      tags:
+      - Behandling Resource
+      description: Ta Bort Behandling
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /behandlingar/hamtning:
+    get:
+      tags:
+      - Behandling Resource
+      description: Hamta Alla Behandlingar
+      responses:
+        "200":
+          description: OK
+  /behandlingar/registrering:
+    post:
+      tags:
+      - Behandling Resource
+      description: Skapa Behandling
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Behandling"
+      responses:
+        "200":
+          description: OK
+  /behandlingar/uppdatering/{id}:
+    patch:
+      tags:
+      - Behandling Resource
+      description: Uppdatera Behandling
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Behandling"
+      responses:
+        "200":
+          description: OK
+  /behandlingar/{behandlingId}/koppla-utforare/{utforareId}:
+    put:
+      tags:
+      - Behandling Resource
+      description: Koppla Utforare Till Behandling
+      parameters:
+      - name: behandlingId
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      - name: utforareId
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /bokningar/borttagning/{id}:
+    delete:
+      tags:
+      - Bokning Resource
+      description: Ta Bort Bokning
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /bokningar/hamtning:
+    get:
+      tags:
+      - Bokning Resource
+      description: Hamta Alla Bokningar
+      responses:
+        "200":
+          description: OK
+  /bokningar/registrering:
+    post:
+      tags:
+      - Bokning Resource
+      description: Skapa Bokning
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BokningRequest"
+      responses:
+        "200":
+          description: OK
+  /kunder/borttagning/{id}:
+    delete:
+      tags:
+      - Kund Resource
+      description: Tabort Kund
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /kunder/hamtning:
+    get:
+      tags:
+      - Kund Resource
+      description: Hamta Alla Kunder
+      responses:
+        "200":
+          description: OK
+  /kunder/registrering:
+    post:
+      tags:
+      - Kund Resource
+      description: Skapa Kund
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Kund"
+      responses:
+        "200":
+          description: OK
+  /kunder/uppdatering/{id}:
+    patch:
+      tags:
+      - Kund Resource
+      description: Uppdatera Kund
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Kund"
+      responses:
+        "200":
+          description: OK
+  /utforare/borttagning/{id}:
+    delete:
+      tags:
+      - Utforare Resource
+      description: Ta Bort Utforare
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /utforare/hamtning:
+    get:
+      tags:
+      - Utforare Resource
+      description: Hamta Alla Utforare
+      responses:
+        "200":
+          description: OK
+  /utforare/registrering:
+    post:
+      tags:
+      - Utforare Resource
+      description: Skapa Utforare
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Utforare"
+      responses:
+        "200":
+          description: OK
+  /utforare/uppdatering/{id}:
+    patch:
+      tags:
+      - Utforare Resource
+      description: Uppdatera Utforare
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Utforare"
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    Behandling:
+      required:
+      - namn
+      - pris
+      - minuter
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+          readOnly: true
+        namn:
+          minLength: 1
+          type: string
+        pris:
+          format: int32
+          minimum: 0
+          type: integer
+        minuter:
+          format: int32
+          minimum: 0
+          type: integer
+        arAktiv:
+          type: boolean
+          readOnly: true
+        utforare:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/Utforare"
+          readOnly: true
+    BokningRequest:
+      required:
+      - kundId
+      - behandlingId
+      - utforareId
+      - bokningsdag
+      type: object
+      properties:
+        kundId:
+          format: int64
+          minimum: 0
+          exclusiveMinimum: true
+          type: integer
+        behandlingId:
+          format: int64
+          minimum: 0
+          exclusiveMinimum: true
+          type: integer
+        utforareId:
+          format: int64
+          minimum: 0
+          exclusiveMinimum: true
+          type: integer
+        bokningsdag:
+          type: string
+    Kund:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+          readOnly: true
+        personnummer:
+          type: string
+        namn:
+          type: string
+        email:
+          type: string
+        arAktiv:
+          type: boolean
+          readOnly: true
+    Utforare:
+      required:
+      - namn
+      - titel
+      - specialisering
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+          readOnly: true
+        namn:
+          pattern: \S
+          type: string
+        titel:
+          pattern: \S
+          type: string
+        specialisering:
+          pattern: \S
+          type: string
+        arAktiv:
+          type: boolean
+          readOnly: true
+        behandlingar:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/Behandling"
+          readOnly: true
